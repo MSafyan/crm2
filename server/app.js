@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 app.use('/api', routes);
 
 app.use('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 const port = process.env.PORT || 5000;
