@@ -1,1 +1,0 @@
-{"version":3,"file":"static/js/412.26198230.chunk.js","mappings":"yHAIA,UAJuB,WACrB,OAAO","sources":["screens/User/ForgotPassword.js"],"sourcesContent":["const ForgotPassword = () => {\n  return <div>ForgotPassword</div>;\n};\n\nexport default ForgotPassword;\n"],"names":[],"sourceRoot":""}
