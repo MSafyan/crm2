@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/165.93754b81.chunk.js","mappings":"yHAIA,UAJsB,WACpB,OAAO","sources":["screens/User/ResetPassword.js"],"sourcesContent":["const ResetPassword = () => {\n  return <div>ResetPassword</div>;\n};\n\nexport default ResetPassword;\n"],"names":[],"sourceRoot":""}

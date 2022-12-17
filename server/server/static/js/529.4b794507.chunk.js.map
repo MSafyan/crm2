@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/529.4b794507.chunk.js","mappings":"yHAOA,UANoB,WAClB,OACE","sources":["screens/User/Setting/Preferences.js"],"sourcesContent":["\nconst Preferences = () => {\n  return (\n    <div>Preferences</div>\n  )\n}\n\nexport default Preferences"],"names":[],"sourceRoot":""}
