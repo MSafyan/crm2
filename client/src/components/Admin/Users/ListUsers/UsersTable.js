@@ -10,12 +10,19 @@ import {
 import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
 import { formatBTC } from '../../../../utils/currencyFormatter';
+import { UserAPI } from '../../../../api';
 
-const UsersTable = ({ users, pageCount }) => {
+const UsersTable = ({ users, pageCount, loading, reload }) => {
   const navigate = useNavigate();
 
+  const deleteUser = (id) => {
+    UserAPI.deleteUser(id).then(() => {
+      reload();
+    });
+  };
+
   return (
-    <div className="col-span-2 w-full rounded-2xl bg-white p-5 shadow-card">
+    <>
       <Table>
         <Thead>
           <Tr>
@@ -49,24 +56,36 @@ const UsersTable = ({ users, pageCount }) => {
                   >
                     <PencilIcon className="h-5 w-5" />
                   </button>
-                  <button className="text-danger">
+                  <button
+                    className="text-danger"
+                    onClick={() => {
+                      deleteUser(user._id);
+                    }}
+                  >
                     <TrashIcon className="h-5 w-5" />
                   </button>
                 </div>
               </Td>
             </Tr>
           ))}
-          {users?.length === 0 && (
+          {!loading && users?.length === 0 && (
             <Tr>
               <Td colSpan={4} className="text-center">
                 No users found
               </Td>
             </Tr>
           )}
+          {loading && (
+            <Tr>
+              <Td colSpan={4} className="text-center">
+                Loading...
+              </Td>
+            </Tr>
+          )}
         </Tbody>
       </Table>
       {pageCount > 1 && <Pagination totalPages={pageCount} />}
-    </div>
+    </>
   );
 };
 

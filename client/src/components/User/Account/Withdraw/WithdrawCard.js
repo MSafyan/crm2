@@ -5,7 +5,7 @@ import InputField from '../../../Shared/Form/InputField';
 
 const WithdrawCard = ({ formik, currencies, paymentMethods }) => {
   return (
-    <div className="w-full rounded-2xl bg-white shadow-card">
+    <div className="col-span-2 w-full rounded-2xl bg-white shadow-card lg:col-span-1">
       <h4 className="border-b border-border p-5 text-lg font-medium  text-heading">
         Withdraw
       </h4>
@@ -35,12 +35,12 @@ const WithdrawCard = ({ formik, currencies, paymentMethods }) => {
           error={formik.touched.amount && formik.errors.amount}
         />
 
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <p>Monthly Limit</p>
           <h6 className="text-sm font-medium leading-tight text-heading">
             $49700 remaining
           </h6>
-        </div>
+        </div> */}
 
         <button
           type="submit"

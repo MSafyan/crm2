@@ -1,5 +1,7 @@
 import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { ConstantsAPI, WithdrawRequestAPI } from '../../../../api';
 import WithdrawCard from './WithdrawCard';
 import WithdrawDetails from './WithdrawDetails';
 
@@ -17,9 +19,14 @@ const validationSchema = Yup.object().shape({
     .required('This field is required.'),
 });
 
-const Withdraw = () => {
+const Withdraw = ({ user }) => {
   const onSubmit = (values) => {
-    console.log(values);
+    WithdrawRequestAPI.createWithdrawRequest({
+      ...values,
+      exchangeRate: constants.exchangeRates?.[formik.values.currency],
+      fee: constants.fee,
+      vat: constants.vat,
+    });
   };
 
   const formik = useFormik({
@@ -28,33 +35,39 @@ const Withdraw = () => {
     onSubmit,
   });
 
-  const currencies = [
-    {
-      value: 'BTC',
-      label: 'Bitcoin',
-    },
-    {
-      value: 'LTC',
-      label: 'Litecoin',
-    },
-  ];
+  const [currencies, setCurrencies] = useState([]);
+  const [constants, setConstants] = useState({});
 
-  const paymentMethods = [
-    {
-      value: '123',
-      label: 'Bank of America ********1234',
-    },
-    {
-      value: '456',
-      label: 'Master Card **** **** **** 1234',
-    },
-  ];
+  useEffect(() => {
+    ConstantsAPI.getAll().then((res) => {
+      setCurrencies(
+        res.currencies.map((currency) => ({
+          label: currency.name,
+          value: currency.symbol,
+        }))
+      );
+      setConstants({
+        exchangeRates: res.exchangeRates,
+        fee: res.fee,
+        vat: res.vat,
+      });
+    });
+  }, []);
 
-  const constants = {
-    exchangeRate: { BTC: 0.00212455, LTC: 0.00212455 },
-    fee: 28,
-    vat: 25,
+  const hideAccountNumber = (number) => {
+    const last4Digits = number.substring(number.length - 4);
+    const stars = '*'.repeat(number.length - 4);
+    return `${stars}${last4Digits}`;
   };
+
+  const paymentMethods = user.bankAccounts
+    ?.filter((bankAccount) => bankAccount.status === 'approved')
+    .map((bankAccount) => {
+      return {
+        value: bankAccount._id,
+        label: bankAccount.bankName + ' ' + hideAccountNumber(bankAccount.iban),
+      };
+    });
 
   return (
     <>
@@ -69,9 +82,9 @@ const Withdraw = () => {
         paymentMethod={paymentMethods.find(
           (paymentMethod) => paymentMethod.value === formik.values.paymentMethod
         )}
-        exchangeRate={constants.exchangeRate[formik.values.currency] || null}
-        fee={constants.fee}
-        vat={constants.vat}
+        exchangeRate={constants.exchangeRates?.[formik.values.currency] || null}
+        fee={constants?.fee}
+        vat={constants?.vat}
       />
     </>
   );

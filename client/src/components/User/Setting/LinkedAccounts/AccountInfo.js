@@ -8,8 +8,9 @@ import {
   CheckIcon,
 } from '@heroicons/react/solid';
 import { useNavigate } from 'react-router-dom';
+import { UserAPI } from '../../../../api';
 
-const AccountInfo = ({ id, bankName, number, verified }) => {
+const AccountInfo = ({ id, bankName, number, verified, reload }) => {
   const navigate = useNavigate();
   const [showAccountInfo, setShowAccountInfo] = useState(false);
 
@@ -17,6 +18,12 @@ const AccountInfo = ({ id, bankName, number, verified }) => {
     const last4Digits = number.substring(number.length - 4);
     const stars = '*'.repeat(number.length - 4);
     return `${stars}${last4Digits}`;
+  };
+
+  const removeAccount = () => {
+    UserAPI.deleteBankAccount(id).then(() => {
+      reload();
+    });
   };
 
   return (
@@ -49,7 +56,7 @@ const AccountInfo = ({ id, bankName, number, verified }) => {
           >
             <PencilIcon className="h-5 w-5" />
           </button>
-          <button className="text-danger">
+          <button className="text-danger" onClick={removeAccount}>
             <TrashIcon className="h-5 w-5" />
           </button>
         </div>
@@ -57,13 +64,19 @@ const AccountInfo = ({ id, bankName, number, verified }) => {
       <div className="flex items-center gap-4">
         <div
           className={`flex h-10 w-10 items-center justify-center rounded-full border border-border text-white ${
-            verified ? 'bg-success' : 'bg-danger'
+            verified === 'approved'
+              ? 'bg-success'
+              : verified === 'pending'
+              ? 'bg-primary'
+              : 'bg-danger'
           }`}
         >
-          {verified && <CheckIcon className="h-6 w-6" />}
+          {verified === 'approved' && <CheckIcon className="h-6 w-6" />}
         </div>
-        {verified ? (
+        {verified === 'approved' ? (
           <p className="cursor-pointer hover:text-primary">Verified</p>
+        ) : verified === 'pending' ? (
+          <p className="cursor-pointer hover:text-primary">Pending</p>
         ) : (
           <p className="cursor-pointer hover:text-primary">Not Verified</p>
         )}

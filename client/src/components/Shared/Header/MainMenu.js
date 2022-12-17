@@ -6,11 +6,11 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const MainMenu = ({ links }) => {
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className="relative z-30">
       <Menu.Button className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-body-bg">
         <UserIcon className="h-5 w-5" />
       </Menu.Button>
@@ -23,7 +23,7 @@ const MainMenu = ({ links }) => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-border overflow-hidden rounded-md bg-white shadow-menu focus:outline-none">
+        <Menu.Items className="z-100 absolute right-0 mt-2 w-56 origin-top-right divide-y divide-border overflow-hidden rounded-md bg-white shadow-menu focus:outline-none">
           {links?.map(({ label, path, Icon }) => (
             <Menu.Item key={label}>
               <Link
@@ -41,7 +41,9 @@ const MainMenu = ({ links }) => {
               className="flex w-full gap-4 px-4 py-4 font-medium text-danger transition hover:bg-border/5"
               onClick={() =>
                 logout(() => {
-                  navigate('/login');
+                  if (isAdmin) {
+                    navigate('/admin/login');
+                  } else navigate('/login');
                 })
               }
             >
