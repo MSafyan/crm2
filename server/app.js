@@ -14,7 +14,11 @@ const app = express();
 app.use(
 	cors({
 		methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
-		origin: ['http://localhost:3000', 'http://193.149.185.94:3000'],
+		origin: [
+			'http://localhost:80',
+			'http://193.149.185.94:80',
+			'http://193.149.185.94',
+		],
 	})
 );
 app.use(express.json());
